@@ -2,25 +2,6 @@
 
 A clean, modern REST API built with Go and PostgreSQL for restaurant and menu management.
 
-## Features
-
-- **REST API** for restaurant and menu item management
-- **PostgreSQL database** with GORM ORM
-- **CRUD operations** for restaurants and menu items
-- **JSON responses** with proper error handling
-- **Database migrations** handled automatically
-- **Docker support** with docker-compose
-- **Environment-based configuration**
-
-## Architecture
-
-The application follows a clean layered architecture:
-- **Handlers**: HTTP request/response handling (Gin framework)
-- **Models**: Database models with GORM tags and validation
-- **Database**: PostgreSQL connection and CRUD operations
-- **Utils**: Business logic services
-- **Main**: Application entry point and initialization
-
 ## Database Schema
 
 - **restaurants**: Store restaurant information (name, address, contact, cuisine, etc.)
@@ -103,32 +84,6 @@ Returns a specific restaurant by ID.
 }
 ```
 
-#### `POST /api/restaurants`
-Creates a new restaurant.
-
-**Request Body:**
-```json
-{
-  "name": "New Restaurant",
-  "address": "456 Oak St",
-  "phone": "+1987654321",
-  "email": "info@newrestaurant.com",
-  "website": "https://newrestaurant.com",
-  "cuisine": "Mexican",
-  "rating": 4.0,
-  "price_range": "$",
-  "opening_time": "10:00",
-  "closing_time": "21:00",
-  "coordinates": [59.3293, 18.0686]
-}
-```
-
-#### `PUT /api/restaurants/{id}`
-Updates an existing restaurant.
-
-#### `DELETE /api/restaurants/{id}`
-Soft deletes a restaurant (sets is_active to false).
-
 ### Menu Items
 
 #### `GET /api/restaurants/{restaurant_id}/menu-items`
@@ -165,35 +120,6 @@ Returns menu items for a specific restaurant.
 }
 ```
 
-#### `POST /api/menu-items`
-Creates a new menu item.
-
-#### `PUT /api/menu-items/{id}`
-Updates an existing menu item.
-
-#### `DELETE /api/menu-items/{id}`
-Soft deletes a menu item.
-
-## Project Structure
-
-```
-lunch-menu-api/
-├── main.go                 # Application entry point
-├── go.mod                  # Go module definition and dependencies
-├── go.sum                  # Go module checksums
-├── docker-compose.yml      # Docker setup with PostgreSQL
-├── Dockerfile             # Docker image definition
-├── internal/
-│   ├── handlers/          # HTTP request handlers (Gin)
-│   │   └── handlers.go
-│   ├── models/            # Database models (GORM)
-│   │   └── models.go
-│   ├── database/          # Database connection and CRUD
-│   │   └── database.go
-│   └── utils/             # Business logic services
-│       └── utils.go
-```
-
 ## Environment Configuration
 
 The application uses environment variables for configuration:
@@ -219,55 +145,6 @@ GIN_MODE=release          # Gin mode (debug/release)
 - Go 1.23 or later
 - PostgreSQL 13 or later
 - Docker and Docker Compose (optional)
-
-### Local Development
-
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd lunch-menu
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   go mod download
-   ```
-
-3. **Set up PostgreSQL:**
-   ```bash
-   # Option 1: Using Docker
-   docker-compose up -d postgres
-   
-   # Option 2: Local PostgreSQL
-   createdb lunch_menu
-   ```
-
-4. **Set environment variables:**
-   ```bash
-   export DB_HOST=localhost
-   export DB_PORT=5432
-   export DB_USER=postgres
-   export DB_PASSWORD=postgres
-   export DB_NAME=lunch_menu
-   export DB_SSLMODE=disable
-   ```
-
-5. **Run the application:**
-   ```bash
-   go run main.go
-   ```
-
-The API will be available at `http://localhost:8080`.
-
-### Building
-
-```bash
-# Build binary
-go build -o lunch-menu-api .
-
-# Run binary
-./lunch-menu-api
-```
 
 ## Deployment
 
@@ -316,7 +193,7 @@ docker-compose down
 
 The database starts empty after initial setup. You have several options to populate it with restaurant data:
 
-### Option 0: Docker Compose (Automatic)
+### Option 1: Docker Compose (Automatic)
 
 **Recommended for development and testing:**
 
@@ -330,7 +207,7 @@ This automatically:
 - Starts the API with data ready
 - No manual steps required!
 
-### Option 1: SQL Seed Script
+### Option 2: SQL Seed Script
 
 Use the provided SQL script with original restaurant data:
 
@@ -343,47 +220,6 @@ psql -d lunch_menu -f seed_data.sql
 ```
 
 This loads 18 restaurants from the original lunch-menu dataset (Uppsala and Solna locations) plus sample menu items.
-
-### Option 2: REST API
-
-Create restaurants and menu items through the API endpoints:
-
-```bash
-# Create a restaurant
-curl -X POST http://localhost:8080/api/restaurants \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "My Restaurant",
-    "description": "Great food",
-    "address": "123 Main St",
-    "coordinate": [59.3293, 18.0686],
-    "homepage": "https://myrestaurant.com",
-    "region": "Stockholm",
-    "phone": "+46 8 123 456",
-    "email": "info@myrestaurant.com"
-  }'
-
-# Create menu items
-curl -X POST http://localhost:8080/api/menu-items \
-  -H "Content-Type: application/json" \
-  -d '{
-    "restaurant_id": 1,
-    "name": "Today Special",
-    "description": "Delicious daily special",
-    "price": 125.00,
-    "category": "Main Course"
-  }'
-```
-
-### Option 3: CSV Import
-
-Use PostgreSQL's COPY command with the provided CSV files:
-
-```bash
-# Copy CSV files to database
-psql -d lunch_menu -c "\COPY restaurants(name,description,address,coordinate,homepage,region,phone,email,is_active) FROM 'restaurants.csv' WITH CSV HEADER;"
-psql -d lunch_menu -c "\COPY menu_items(restaurant_id,name,description,price,category,is_available) FROM 'menu_items.csv' WITH CSV HEADER;"
-```
 
 ## Database Migrations
 
@@ -399,23 +235,13 @@ Database migrations are handled automatically on application startup using GORM'
 
 ```bash
 # Get all restaurants
-curl http://localhost:8080/api/restaurants
+curl http://localhost:8000/api/restaurants
 
 # Get specific restaurant
-curl http://localhost:8080/api/restaurants/1
-
-# Create new restaurant
-curl -X POST http://localhost:8080/api/restaurants \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Test Restaurant",
-    "address": "123 Test St",
-    "cuisine": "Italian",
-    "rating": 4.5
-  }'
+curl http://localhost:8000/api/restaurants/1
 
 # Get menu items for restaurant
-curl http://localhost:8080/api/restaurants/1/menu-items
+curl http://localhost:8000/api/restaurants/1/menu-items
 ```
 
 ## Contributing
@@ -425,46 +251,6 @@ curl http://localhost:8080/api/restaurants/1/menu-items
 3. Commit your changes
 4. Push to the branch
 5. Create a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-│       └── utils.go
-└── README.md              # This file
-```
-
-## Dependencies
-
-- **gin-gonic/gin** - HTTP web framework
-- **gin-contrib/cors** - CORS middleware
-- **PuerkitoBio/goquery** - HTML parsing (for menu scraping)
-- **gorm.io/gorm** - ORM for database operations
-- **gorm.io/driver/postgres** - PostgreSQL driver for GORM
-
-## Prerequisites
-
-- Go 1.23 or higher
-- PostgreSQL 12+ (or use Docker Compose)
-
-## Running the Application
-
-### Quick Start with Docker Compose
-
-The easiest way to run the application is using Docker Compose:
-
-```bash
-# Start PostgreSQL and the API
-docker-compose up -d
-
-# Check logs
-docker-compose logs -f api
-```
-
-This will:
-1. Start a PostgreSQL database
-2. Run database migrations
-3. Seed the database with restaurant data
-4. Start the API server on port 8000
 
 ### Manual Setup
 
@@ -498,62 +284,6 @@ This will:
    go run .
    ```
 
-### Development
-```bash
-# Clone the repository and navigate to the Go backend
-cd backend-go
-
-# Install dependencies
-go mod tidy
-
-# Set up environment variables (see above)
-# Start PostgreSQL database
-
-# Run the application
-go run .
-```
-
-The server will start on port 8000 by default. The application will:
-1. Connect to PostgreSQL
-2. Run database migrations automatically
-3. Load restaurant data from restaurants.json and seed the database
-4. Start the HTTP server
-
-### Production Build
-```bash
-# Build the binary
-go build -o lunch-menu-api .
-
-# Run the binary
-./lunch-menu-api
-```
-
-### Using Docker
-```bash
-# Build the Docker image
-docker build -t lunch-menu-api .
-
-# Run the container
-docker run -p 8000:8000 lunch-menu-api
-```
-
-## Configuration
-
-The application can be configured using environment variables:
-
-**Server Configuration:**
-- `PORT` - Server port (default: 8000)
-- `VERSION` - Application version (default: "development")
-- `GIN_MODE` - Gin mode: debug, release, or test (default: debug)
-
-**Database Configuration:**
-- `DB_HOST` - PostgreSQL host (default: localhost)
-- `DB_PORT` - PostgreSQL port (default: 5432)
-- `DB_USER` - Database username (default: postgres)
-- `DB_PASSWORD` - Database password (default: postgres)
-- `DB_NAME` - Database name (default: lunch_menu)
-- `DB_SSLMODE` - SSL mode (default: disable)
-
 ## Testing the API
 
 You can test the API endpoints using curl:
@@ -563,13 +293,13 @@ You can test the API endpoints using curl:
 curl http://localhost:8000/api
 
 # List all restaurants
-curl http://localhost:8000/api/restaurant
+curl http://localhost:8000/api/restaurants
 
-# Get a specific restaurant
-curl http://localhost:8000/api/restaurant/glada
+# Get a specific restaurant info
+curl http://localhost:8000/api/restaurants/<restaurant-ID>
 
-# Get version
-curl http://localhost:8000/api/version
+# Get dish description
+curl http://localhost:8000/api/menu-items/<menu-item-ID>
 ```
 
 ## How It Works
@@ -582,35 +312,3 @@ curl http://localhost:8000/api/version
    - Store the parsed menu in the database for future requests
 4. **API Responses**: Serve data from the database with real-time menu parsing as needed
 
-## Menu Parsing Implementation Status
-
-Currently, the menu parsing logic contains stub implementations for all restaurant parsers. Each parser returns a placeholder message indicating that menu parsing is not yet implemented for that specific restaurant.
-
-The database is ready to store parsed menus, and the infrastructure supports:
-- Automatic menu refresh based on age
-- Caching of parsed results
-- Fallback to database when parsing fails
-
-To fully implement menu parsing, you would need to:
-
-1. Examine the original Python parsers in `parser.py`
-2. Implement the specific parsing logic for each restaurant in the parsers package
-3. Handle HTML parsing, date filtering, and text cleanup
-4. Add error handling for network requests and parsing failures
-
-## Differences from Original
-
-This Go implementation maintains API compatibility with the original Python backend but has some architectural differences:
-
-1. **No FastAPI cache decorator** - Instead uses cache headers
-2. **Structured project layout** - Separates concerns into packages
-3. **Stub menu parsers** - Parsing logic needs to be implemented
-4. **Static binary** - Can be deployed without runtime dependencies
-
-## Development Notes
-
-- The application loads restaurant data from `restaurants.json` on startup
-- CORS is configured to allow all origins for development
-- The parser map is initialized with stub functions that can be replaced with actual implementations
-- Error handling follows Go idioms with explicit error returns
-- JSON responses match the original API structure exactly
