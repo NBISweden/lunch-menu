@@ -46,15 +46,9 @@ func main() {
 	log.Printf("API endpoints:")
 	log.Printf("  GET    /api")
 	log.Printf("  GET    /api/restaurants")
-	log.Printf("  POST   /api/restaurants")
 	log.Printf("  GET    /api/restaurants/:id")
-	log.Printf("  PUT    /api/restaurants/:id")
-	log.Printf("  DELETE /api/restaurants/:id")
 	log.Printf("  GET    /api/restaurants/:id/menu")
-	log.Printf("  POST   /api/menu-items")
 	log.Printf("  GET    /api/menu-items/:id")
-	log.Printf("  PUT    /api/menu-items/:id")
-	log.Printf("  DELETE /api/menu-items/:id")
 
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
