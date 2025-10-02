@@ -123,60 +123,6 @@ func GetRestaurantByID(id uint) (*models.Restaurant, error) {
 	return &restaurant, nil
 }
 
-func CreateRestaurant(restaurant *models.Restaurant) error {
-	query := `
-		INSERT INTO restaurants (name, description, address, coordinate, homepage, region, phone, email, is_active, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, true, NOW(), NOW())
-		RETURNING id, created_at, updated_at`
-
-	err := DB.QueryRow(query, restaurant.Name, restaurant.Description, restaurant.Address,
-		restaurant.Coordinate, restaurant.Homepage, restaurant.Region, restaurant.Phone, restaurant.Email).
-		Scan(&restaurant.ID, &restaurant.CreatedAt, &restaurant.UpdatedAt)
-	if err != nil {
-		return fmt.Errorf("failed to create restaurant: %w", err)
-	}
-	restaurant.IsActive = true
-	return nil
-}
-
-func UpdateRestaurant(restaurant *models.Restaurant) error {
-	query := `
-		UPDATE restaurants 
-		SET name = $1, description = $2, address = $3, coordinate = $4, homepage = $5, 
-		    region = $6, phone = $7, email = $8, updated_at = NOW()
-		WHERE id = $9 AND is_active = true
-		RETURNING updated_at`
-
-	err := DB.QueryRow(query, restaurant.Name, restaurant.Description, restaurant.Address,
-		restaurant.Coordinate, restaurant.Homepage, restaurant.Region, restaurant.Phone,
-		restaurant.Email, restaurant.ID).Scan(&restaurant.UpdatedAt)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return fmt.Errorf("restaurant not found or inactive")
-		}
-		return fmt.Errorf("failed to update restaurant: %w", err)
-	}
-	return nil
-}
-
-func DeleteRestaurant(id uint) error {
-	query := "UPDATE restaurants SET is_active = false, updated_at = NOW() WHERE id = $1"
-	result, err := DB.Exec(query, id)
-	if err != nil {
-		return fmt.Errorf("failed to delete restaurant: %w", err)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get rows affected: %w", err)
-	}
-
-	if rowsAffected == 0 {
-		return fmt.Errorf("restaurant not found")
-	}
-	return nil
-}
-
 func GetMenuItems(restaurantID uint, limit, offset int) ([]models.MenuItem, int64, error) {
 	var menuItems []models.MenuItem
 	var total int64
@@ -236,55 +182,4 @@ func GetMenuItemByID(id uint) (*models.MenuItem, error) {
 		return nil, fmt.Errorf("failed to get menu item: %w", err)
 	}
 	return &menuItem, nil
-}
-
-func CreateMenuItem(menuItem *models.MenuItem) error {
-	query := `
-		INSERT INTO menu_items (restaurant_id, name, description, price, category, is_available, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, true, NOW(), NOW())
-		RETURNING id, created_at, updated_at`
-
-	err := DB.QueryRow(query, menuItem.RestaurantID, menuItem.Name, menuItem.Description,
-		menuItem.Price, menuItem.Category).Scan(&menuItem.ID, &menuItem.CreatedAt, &menuItem.UpdatedAt)
-	if err != nil {
-		return fmt.Errorf("failed to create menu item: %w", err)
-	}
-	menuItem.IsAvailable = true
-	return nil
-}
-
-func UpdateMenuItem(menuItem *models.MenuItem) error {
-	query := `
-		UPDATE menu_items 
-		SET name = $1, description = $2, price = $3, category = $4, updated_at = NOW()
-		WHERE id = $5 AND is_available = true
-		RETURNING updated_at`
-
-	err := DB.QueryRow(query, menuItem.Name, menuItem.Description, menuItem.Price,
-		menuItem.Category, menuItem.ID).Scan(&menuItem.UpdatedAt)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return fmt.Errorf("menu item not found or inactive")
-		}
-		return fmt.Errorf("failed to update menu item: %w", err)
-	}
-	return nil
-}
-
-func DeleteMenuItem(id uint) error {
-	query := "UPDATE menu_items SET is_available = false, updated_at = NOW() WHERE id = $1"
-	result, err := DB.Exec(query, id)
-	if err != nil {
-		return fmt.Errorf("failed to delete menu item: %w", err)
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get rows affected: %w", err)
-	}
-
-	if rowsAffected == 0 {
-		return fmt.Errorf("menu item not found")
-	}
-	return nil
 }

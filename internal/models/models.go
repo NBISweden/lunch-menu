@@ -60,51 +60,6 @@ type MenuItem struct {
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-// Request Models
-
-// CreateRestaurantRequest represents the request body for creating a restaurant
-type CreateRestaurantRequest struct {
-	Name        string     `json:"name" binding:"required"`
-	Description string     `json:"description"`
-	Address     string     `json:"address"`
-	Coordinate  FloatArray `json:"coordinate"`
-	Homepage    string     `json:"homepage"`
-	Region      string     `json:"region"`
-	Phone       string     `json:"phone"`
-	Email       string     `json:"email"`
-}
-
-// UpdateRestaurantRequest represents the request body for updating a restaurant
-type UpdateRestaurantRequest struct {
-	Name        *string     `json:"name"`
-	Description *string     `json:"description"`
-	Address     *string     `json:"address"`
-	Coordinate  *FloatArray `json:"coordinate"`
-	Homepage    *string     `json:"homepage"`
-	Region      *string     `json:"region"`
-	Phone       *string     `json:"phone"`
-	Email       *string     `json:"email"`
-	IsActive    *bool       `json:"is_active"`
-}
-
-// CreateMenuItemRequest represents the request body for creating a menu item
-type CreateMenuItemRequest struct {
-	RestaurantID uint    `json:"restaurant_id" binding:"required"`
-	Name         string  `json:"name" binding:"required"`
-	Description  string  `json:"description"`
-	Price        float64 `json:"price"`
-	Category     string  `json:"category"`
-}
-
-// UpdateMenuItemRequest represents the request body for updating a menu item
-type UpdateMenuItemRequest struct {
-	Name        *string  `json:"name"`
-	Description *string  `json:"description"`
-	Price       *float64 `json:"price"`
-	Category    *string  `json:"category"`
-	IsAvailable *bool    `json:"is_available"`
-}
-
 // Response Models
 
 // RestaurantsResponse represents the response for listing restaurants
