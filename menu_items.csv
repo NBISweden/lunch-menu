@@ -1,0 +1,7 @@
+restaurant_id,name,description,price,category,is_available
+1,Swedish Meatballs,Traditional Swedish meatballs with cream sauce and lingonberries,145.00,Main Course,true
+1,Caesar Salad,Fresh romaine lettuce with caesar dressing croutons and parmesan,95.00,Salad,true
+1,Cinnamon Bun,Freshly baked Swedish cinnamon bun,35.00,Dessert,true
+2,Duck Confit,Slow-cooked duck leg with roasted potatoes and seasonal vegetables,285.00,Main Course,true
+3,Spaghetti Carbonara,Classic Italian pasta with eggs pecorino cheese and pancetta,165.00,Main Course,true
+4,Quinoa Buddha Bowl,Nutritious bowl with quinoa roasted vegetables and tahini dressing,125.00,Main Course,true

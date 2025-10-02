@@ -1,0 +1,5 @@
+name,description,address,coordinate,homepage,region,phone,email,is_active
+Café Linnéa,Cozy café with Swedish classics and pastries,"Kungsgatan 12, Stockholm","[59.3326, 18.0649]",https://cafelinnea.se,Stockholm,+46 8 123 456,info@cafelinnea.se,true
+Bistro Magnus,French-inspired bistro with seasonal menu,"Upplandsgatan 7, Stockholm","[59.3498, 18.0684]",https://bistromagnus.se,Stockholm,+46 8 234 567,contact@bistromagnus.se,true
+Pasta Prima,Authentic Italian pasta and pizza,"Sveavägen 45, Stockholm","[59.3367, 18.0628]",https://pastaprima.se,Stockholm,+46 8 345 678,hello@pastaprima.se,true
+Green Garden,Vegetarian and vegan healthy food,"Östermalm 23, Stockholm","[59.3345, 18.0742]",https://greengarden.se,Stockholm,+46 8 456 789,info@greengarden.se,true
