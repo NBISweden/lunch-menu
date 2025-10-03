@@ -221,28 +221,6 @@ psql -d lunch_menu -f seed_data.sql
 
 This loads 18 restaurants from the original lunch-menu dataset (Uppsala and Solna locations) plus sample menu items.
 
-## Database Migrations
-
-Database migrations are handled automatically on application startup using GORM's AutoMigrate feature. This will:
-
-- Create tables if they don't exist
-- Add new columns when models are updated
-- Create indexes defined in model tags
-
-## API Testing
-
-### Using curl
-
-```bash
-# Get all restaurants
-curl http://localhost:8000/api/restaurants
-
-# Get specific restaurant
-curl http://localhost:8000/api/restaurants/1
-
-# Get menu items for restaurant
-curl http://localhost:8000/api/restaurants/1/menu-items
-```
 
 ## Contributing
 
@@ -301,14 +279,4 @@ curl http://localhost:8000/api/restaurants/<restaurant-ID>
 # Get dish description
 curl http://localhost:8000/api/menu-items/<menu-item-ID>
 ```
-
-## How It Works
-
-1. **Startup**: The application connects to PostgreSQL and runs migrations
-2. **Data Loading**: Restaurant data is loaded from restaurants.json and stored in the database
-3. **Menu Parsing**: When a restaurant is requested:
-   - Check if fresh menu exists in database
-   - If not, parse the restaurant's website for current menu
-   - Store the parsed menu in the database for future requests
-4. **API Responses**: Serve data from the database with real-time menu parsing as needed
 
