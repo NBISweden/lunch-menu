@@ -43,12 +43,6 @@ func InitDatabase() error {
 	return nil
 }
 
-func MigrateDatabase() error {
-	// Since we're using SQL initialization scripts, no migration needed
-	log.Println("Database migration skipped - using SQL initialization")
-	return nil
-}
-
 func CloseDatabase() error {
 	if DB == nil {
 		return nil
