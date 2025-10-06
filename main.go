@@ -16,11 +16,6 @@ func main() {
 	}
 	defer database.CloseDatabase()
 
-	// Run database migrations
-	if err := database.MigrateDatabase(); err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
-	}
-
 	// Create Gin router
 	r := gin.Default()
 
@@ -40,6 +35,7 @@ func main() {
 	log.Printf("  GET    /api/restaurants/:id")
 	log.Printf("  GET    /api/restaurants/:id/menu")
 	log.Printf("  GET    /api/menu-items/:id")
+	log.Printf("  GET    /api/stats")
 
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)

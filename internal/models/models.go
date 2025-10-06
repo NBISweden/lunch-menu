@@ -90,3 +90,23 @@ type ErrorResponse struct {
 	Error   string `json:"error"`
 	Message string `json:"message"`
 }
+
+// BusinessStatistics represents business analytics data
+type BusinessStatistics struct {
+	TotalRestaurants    int64                    `json:"total_restaurants"`
+	ActiveRestaurants   int64                    `json:"active_restaurants"`
+	InactiveRestaurants int64                    `json:"inactive_restaurants"`
+	TotalMenuItems      int64                    `json:"total_menu_items"`
+	AveragePrice        float64                  `json:"average_price"`
+	RevenueByCateory    map[string]float64       `json:"revenue_by_category"`
+	RestaurantDetails   []RestaurantBusinessData `json:"restaurant_details"`
+}
+
+// RestaurantBusinessData represents per-restaurant business data
+type RestaurantBusinessData struct {
+	RestaurantID   uint    `json:"restaurant_id"`
+	RestaurantName string  `json:"restaurant_name"`
+	MenuItemCount  int64   `json:"menu_item_count"`
+	AveragePrice   float64 `json:"average_price"`
+	TotalRevenue   float64 `json:"total_revenue"`
+}

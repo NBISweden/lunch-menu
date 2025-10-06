@@ -42,12 +42,6 @@ func InitDatabase() error {
 	return nil
 }
 
-func MigrateDatabase() error {
-	// Since we're using SQL initialization scripts, no migration needed
-	log.Println("Database migration skipped - using SQL initialization")
-	return nil
-}
-
 func CloseDatabase() error {
 	if DB == nil {
 		return nil
@@ -181,4 +175,84 @@ func GetMenuItemByID(id uint) (*models.MenuItem, error) {
 		return nil, fmt.Errorf("failed to get menu item: %w", err)
 	}
 	return &menuItem, nil
+}
+
+// GetBusinessStatistics retrieves business analytics data
+func GetBusinessStatistics() (*models.BusinessStatistics, error) {
+	stats := &models.BusinessStatistics{}
+
+	// Get restaurant counts
+	err := DB.QueryRow(`
+		SELECT 
+			COUNT(*) as total,
+			COUNT(CASE WHEN is_active = true THEN 1 END) as active,
+			COUNT(CASE WHEN is_active = false THEN 1 END) as inactive
+		FROM restaurants
+	`).Scan(&stats.TotalRestaurants, &stats.ActiveRestaurants, &stats.InactiveRestaurants)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get restaurant stats: %w", err)
+	}
+
+	// Get menu item count and average price
+	err = DB.QueryRow(`
+		SELECT COUNT(*), COALESCE(AVG(price), 0)
+		FROM menu_items 
+		WHERE is_available = true
+	`).Scan(&stats.TotalMenuItems, &stats.AveragePrice)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get menu stats: %w", err)
+	}
+
+	// Get revenue by category
+	rows, err := DB.Query(`
+		SELECT category, SUM(price * 100) as estimated_revenue 
+		FROM menu_items 
+		WHERE is_available = true 
+		GROUP BY category
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get revenue by category: %w", err)
+	}
+	defer rows.Close()
+
+	stats.RevenueByCateory = make(map[string]float64)
+	for rows.Next() {
+		var category string
+		var revenue float64
+		if err := rows.Scan(&category, &revenue); err != nil {
+			return nil, fmt.Errorf("failed to scan revenue data: %w", err)
+		}
+		stats.RevenueByCateory[category] = revenue
+	}
+
+	// Get detailed per-restaurant business data
+	restaurantRows, err := DB.Query(`
+		SELECT 
+			r.id, r.name,
+			COUNT(m.id) as menu_count,
+			COALESCE(AVG(m.price), 0) as avg_price,
+			COALESCE(SUM(m.price * 150), 0) as estimated_total_revenue
+		FROM restaurants r
+		LEFT JOIN menu_items m ON r.id = m.restaurant_id AND m.is_available = true
+		WHERE r.is_active = true
+		GROUP BY r.id, r.name
+		ORDER BY estimated_total_revenue DESC
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get restaurant business data: %w", err)
+	}
+	defer restaurantRows.Close()
+
+	var restaurantDetails []models.RestaurantBusinessData
+	for restaurantRows.Next() {
+		var detail models.RestaurantBusinessData
+		if err := restaurantRows.Scan(&detail.RestaurantID, &detail.RestaurantName,
+			&detail.MenuItemCount, &detail.AveragePrice, &detail.TotalRevenue); err != nil {
+			return nil, fmt.Errorf("failed to scan restaurant business data: %w", err)
+		}
+		restaurantDetails = append(restaurantDetails, detail)
+	}
+	stats.RestaurantDetails = restaurantDetails
+
+	return stats, nil
 }
