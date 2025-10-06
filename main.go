@@ -6,7 +6,6 @@ import (
 	"lunch-menu-api/internal/handlers"
 	"os"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,14 +23,6 @@ func main() {
 
 	// Create Gin router
 	r := gin.Default()
-
-	// Setup CORS middleware
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowCredentials = true
-	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
-	config.AllowHeaders = []string{"*"}
-	r.Use(cors.New(config))
 
 	// Setup routes
 	handlers.SetupRoutes(r)

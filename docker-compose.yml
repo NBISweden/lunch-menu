@@ -5,11 +5,11 @@ services:
     environment:
       POSTGRES_DB: lunch_menu
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
       - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -24,7 +24,6 @@ services:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: postgres
-      DB_PASSWORD: postgres
       DB_NAME: lunch_menu
       DB_SSLMODE: disable
       GIN_MODE: release

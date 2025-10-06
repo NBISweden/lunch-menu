@@ -129,7 +129,6 @@ The application uses environment variables for configuration:
 DB_HOST=localhost          # PostgreSQL host
 DB_PORT=5432              # PostgreSQL port
 DB_USER=postgres          # Database username
-DB_PASSWORD=postgres      # Database password
 DB_NAME=lunch_menu        # Database name
 DB_SSLMODE=disable        # SSL mode (disable for local dev)
 
@@ -248,7 +247,6 @@ This loads 18 restaurants from the original lunch-menu dataset (Uppsala and Soln
    export DB_HOST=localhost
    export DB_PORT=5432
    export DB_USER=postgres
-   export DB_PASSWORD=postgres
    export DB_NAME=lunch_menu
    export DB_SSLMODE=disable
    ```

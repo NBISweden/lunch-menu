@@ -26,24 +26,23 @@ fi
 
 # Check if database is reachable
 echo "🔍 Checking database connection..."
-if ! PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "SELECT 1;" > /dev/null 2>&1; then
+if ! psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "SELECT 1;" > /dev/null 2>&1; then
     echo "❌ Error: Cannot connect to database"
     echo "   Please ensure:"
     echo "   - PostgreSQL is running"
     echo "   - Database '$DB_NAME' exists"
     echo "   - Connection parameters are correct"
-    echo "   - Set DB_PASSWORD environment variable if needed"
     exit 1
 fi
 
 # Run the seed script
 echo "📊 Loading restaurant data..."
-if PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -f seed_data.sql; then
+if psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -f seed_data.sql; then
     echo ""
     echo "✅ Database seeded successfully!"
     echo ""
     echo "📈 Database stats:"
-    PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "
+    psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -c "
         SELECT 
             'Restaurants' as table_name, 
             COUNT(*) as count 
