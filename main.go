@@ -44,6 +44,7 @@ func main() {
 	log.Printf("  GET    /api/restaurants/:id")
 	log.Printf("  GET    /api/restaurants/:id/menu")
 	log.Printf("  GET    /api/menu-items/:id")
+	log.Printf("  GET    /api/stats")
 
 	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)

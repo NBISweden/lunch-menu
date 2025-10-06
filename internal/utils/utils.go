@@ -30,6 +30,11 @@ func (s *RestaurantService) GetRestaurant(id uint) (*models.Restaurant, error) {
 	return database.GetRestaurantByID(id)
 }
 
+// GetBusinessStatistics retrieves business analytics data
+func (s *RestaurantService) GetBusinessStatistics() (*models.BusinessStatistics, error) {
+	return database.GetBusinessStatistics()
+}
+
 // MenuItemService provides business logic for menu item operations
 type MenuItemService struct{}
 

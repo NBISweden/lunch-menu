@@ -37,6 +37,9 @@ func SetupRoutes(r *gin.Engine) {
 		{
 			menuItems.GET("/:id", GetMenuItem)
 		}
+
+		// Statistics route
+		api.GET("/stats", GetBusinessStatistics)
 	}
 }
 
@@ -156,4 +159,18 @@ func GetMenuItem(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, menuItem)
+}
+
+// GetBusinessStatistics returns business analytics
+func GetBusinessStatistics(c *gin.Context) {
+	stats, err := restaurantService.GetBusinessStatistics()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{
+			Error:   "DATABASE_ERROR",
+			Message: "Failed to retrieve business statistics",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, stats)
 }
