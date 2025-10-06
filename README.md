@@ -1,132 +1,60 @@
-# Lunch Menu API - Go + PostgreSQL
+# NBIS Assignment
 
-A clean, modern REST API built with Go and PostgreSQL for restaurant and menu management.
+Assignment for the position as backend system developer with focus on security
+with reference number: UFV-PA 2025/2222.
 
-## Database Schema
+A pull request (PR) called "Feedback" will automatically be created on your repository. You can use that PRs for questions and to request feedback. Please tag the team @NBISweden/sysdev-recruitment in the text.
 
-- **restaurants**: Store restaurant information (name, address, contact, cuisine, etc.)
-- **menu_items**: Store menu items linked to restaurants with dietary information
+## How to submit
 
-## API Endpoints
+All tasks should be done in the form of PRs towards the repo. It is up to you to decide how you will split your answers into different PRs. You can assume that the PRs will be merged as is, so PRs may be based on the final commit of the previous PR. The PRs should include README updates if functionality is added. Also please tag with completed (if you work with the GitHub web, you will need to create a release for this, which can be done from the repository main page).
 
-### General
+# Lunch Menu API - Security Enhancement Assignment
 
-- **`GET /api`**: Returns basic API information, including the current version.
+The newest intern at the NBIS SysDev team started working with us recently and directly recognized the need of having an API that provides information about the lunch menu from the restaurants around the office. Therefore, proceeded to build a first version of the API, that would eventually be deployed on our servers and help the team to decide where to have lunch on each day.
 
-### Restaurants
+## Overview
 
-- **`GET /api/restaurants`**: Returns a paginated list of active restaurants.
-- **`GET /api/restaurants/{id}`**: Returns a specific restaurant by ID.
-- **`GET /api/restaurants/{id}/menu`**: Returns menu items for a specific restaurant.
+The current API provides public access to restaurant and menu data. You, as our new backend developer with expertise in security, are assigned the task of extending the existing lunch menu API to include user authentication, authorization, and to improve overall security. 
 
-### Menu Items
+## Tasks
 
-- **`GET /api/menu-items/{id}`**: Returns a specific menu item by ID.
+Specifically, the tasks that you are supposed to work on as part of this assignment are the following:
 
-### Statistics
+### Task 1
 
-- **`GET /api/stats`**: Returns business analytics and statistics.
+The lunch menu API is currently completely open and the endpoints can be accessed by anyone. The first task is to implement access control mechanisms, which would allow for an administrator to interact with the database and make changes to it. In this case, the information endpoints can remain open, while the ones related to administration should only be accessible by authorized people. It is up to you to decide the authentication and authorization mechanism that you will implement for this use case and what improvements you would like to make in the existing code.
+
+### Task 2
+
+The second task involves the implementation of the endpoints required in order to enable CRUD functionality for the administrators of the API. Specifically, an administrator should be able to: 
+1. Create new entries in the database. 
+2. Delete existing entries from the database.
+3. Update existing entries in the database.
+
+It is up to you to decide what information should be accessible. 
+
+Please focus on the way the access is granted and on the secure implementation of the features, rather than on the number of functionalities. In other words, it is more important to have one endpoint that is safely adding data to the database, than multiple of them that lack security.
+
+### (Optional) Task 3
+
+The optional task is related to the deployment of your solution. For this task, create a kubernetes deployment setup for the application with proper configuration management and security considerations for production deployment. 
+
+Please ensure detailed documentation of the deployment process is provided.
+
+In case the task is too long, feel free to describe the considerations you would make, instead of providing the code itself.
 
 
-## Deployment 
+## General instructions
+Please provide not only working but acceptable code. In this case, that includes an appropriate level of documentation, testing, and so on. Assume that potential future colleagues will review your code and use it in upcoming projects.
 
-### Docker Compose
+You are not required to write your implementation from scratch, feel free to build on existing libraries, as well as specific frameworks.
 
-Docker Compose automatically sets up PostgreSQL and loads the restaurant data:
+It should be possible to deploy your final solution by following the instructions you include in the repository.
 
-```bash
-# Start all services (PostgreSQL + API with data)
-docker-compose up -d
+## Questions
 
-# View logs to see initialization
-docker-compose logs -f
+If you have any questions or need any kind of feedback please open a new issue and tag the team @NBISweden/sysdev-recruitment when you add your question.
 
-# Stop services
-docker-compose down
-```
 
-### Manual Setup
-
-1. **Start PostgreSQL**
-   ```bash
-   # Using Docker
-   docker run -d --name postgres \
-     -e POSTGRES_DB=lunch_menu \
-     -e POSTGRES_USER=postgres \
-     -p 5432:5432 \
-     postgres:15-alpine
-   ```
-
-2. **Configure Environment Variables**
-   ```bash
-   export DB_HOST=localhost
-   export DB_PORT=5432
-   export DB_USER=postgres
-   export DB_NAME=lunch_menu
-   export DB_SSLMODE=disable
-   ```
-
-3. **Run the Application**
-   ```bash
-   # Install dependencies
-   go mod tidy
-
-   # Run the application
-   go run .
-   ```
-
-## Loading Data
-
-The database starts empty after initial setup. You have several options to populate it with restaurant data:
-
-### Option 1: Docker Compose (Automatic)
-
-**Recommended for development and testing:**
-
-```bash
-docker-compose up -d
-```
-
-This automatically:
-- Creates PostgreSQL database
-- Loads all 18 original restaurants
-- Starts the API with data ready
-- No manual steps required!
-
-### Option 2: SQL Seed Script
-
-Use the provided SQL script with original restaurant data:
-
-```bash
-# Using the provided script (recommended)
-./seed_database.sh
-
-# Or manually with psql
-psql -d lunch_menu -f seed_data.sql
-```
-
-This loads 18 restaurants from the original lunch-menu dataset (Uppsala and Solna locations) plus sample menu items.
-
-## Testing the API
-
-You can test the API endpoints using curl:
-
-```bash
-# Get API info
-curl http://localhost:8000/api
-
-# List all restaurants (supports pagination with limit and offset)
-curl "http://localhost:8000/api/restaurants?limit=10&offset=0"
-
-# Get a specific restaurant info
-curl http://localhost:8000/api/restaurants/<restaurant-ID>
-
-# Get menu items for a specific restaurant (supports pagination with limit and offset)
-curl "http://localhost:8000/api/restaurants/<restaurant-ID>/menu?limit=10&offset=0"
-
-# Get a specific menu item
-curl http://localhost:8000/api/menu-items/<menu-item-ID>
-
-# Get business statistics
-curl http://localhost:8000/api/stats
-```
+Good luck!
