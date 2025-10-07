@@ -3,7 +3,7 @@
 Assignment for the position as backend system developer with focus on security
 with reference number: UFV-PA 2025/2222.
 
-A pull request (PR) called "Feedback" will automatically be created on your repository. You can use that PRs for questions and to request feedback. Please tag the team @NBISweden/sysdev-recruitment in the text.
+A pull request (PR) called "Feedback" will automatically be created on your repository. You can use that PR for questions and to request feedback. Please tag the team @NBISweden/sysdev-recruitment in the text.
 
 ## How to submit
 
