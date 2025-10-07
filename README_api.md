@@ -36,13 +36,13 @@ Docker Compose automatically sets up PostgreSQL and loads the restaurant data:
 
 ```bash
 # Start all services (PostgreSQL + API with data)
-docker-compose up -d
+docker compose up -d
 
 # View logs to see initialization
-docker-compose logs -f
+docker compose logs -f
 
 # Stop services
-docker-compose down
+docker compose down
 ```
 
 ### Manual Setup
